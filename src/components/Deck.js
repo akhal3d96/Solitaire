@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { move, selectCards } from '../features/cardSlice'
+import { move, flip, selectCards } from '../features/cardSlice'
 import { pipe, shuffle } from '../helpers'
 import newCardPosition from '../newCardPosition'
 
@@ -25,6 +25,8 @@ export default function Deck () {
     const newCardPositionInfo = newCardPosition(cardId, 'A')
     // console.log(newCardPositionInfo)
     pipe(move, dispatch)(newCardPositionInfo)
+    pipe(flip, dispatch)(cardId)
+
     setPrevCardId(newCardPositionInfo.cardId)
   }
 

@@ -18,7 +18,8 @@ export const CardCell = React.forwardRef((props, ref) => {
 CardCell.displayName = 'CardCell'
 CardCell.propTypes = {
   children: PropTypes.array,
-  style: PropTypes.object
+  style: PropTypes.object,
+  isOver: PropTypes.bool
 }
 
 export default CardCell

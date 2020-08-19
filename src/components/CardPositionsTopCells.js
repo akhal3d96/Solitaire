@@ -10,13 +10,14 @@ import dropCard from './dropCard'
 import findCards from './findCards'
 
 function initialDropRule (stackSymbol, currentStackCardsIndex, cardId) {
-  return !stackSymbol /* is null */ &&
+  return !stackSymbol /* is undefined */ &&
   !currentStackCardsIndex /* is zero */ &&
   !cardId /* is zero */
 }
 
-function rules (cardsInfo, item, stackSymbol, currentStackCardsIndex, setStackSymbol, setCurrentStackCardsIndex) {
+function rules (cardsInfo, item, stackSymbol, currentStackCardsIndex) {
   const cardInfo = cardsInfo.find(cardInfo => cardInfo.id === item.cardId)
+
   // Initial
   if (initialDropRule(stackSymbol, currentStackCardsIndex, cardInfo.index)) return true
 
@@ -26,6 +27,7 @@ function rules (cardsInfo, item, stackSymbol, currentStackCardsIndex, setStackSy
   // Check index
   if (cardInfo.index === currentStackCardsIndex) return true
 
+  // if ((currentStackCardsIndex - cardInfo.index) === 1) return true
   return false
 }
 
@@ -41,13 +43,14 @@ export default function CardPositionsTopCells ({ id, style = {}, cards }) {
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
-    canDrop: (item, monitor) => rules(cardsInfo, item, stackSymbol, currentStackCardsIndex, setStackSymbol, setCurrentStackCardsIndex),
+    canDrop: (item, monitor) => rules(cardsInfo, item, stackSymbol, currentStackCardsIndex),
     drop: item => {
-      if (initialDropRule(stackSymbol, currentStackCardsIndex, item.cardId)) {
-        const cardInfo = cardsInfo.find(cardInfo => cardInfo.id === item.cardId)
+      const cardInfo = cardsInfo.find(cardInfo => cardInfo.id === item.cardId)
+      if (initialDropRule(stackSymbol, currentStackCardsIndex, item.index)) {
         setStackSymbol(cardInfo.symbol)
-        setCurrentStackCardsIndex(currentStackCardsIndex + 1)
       }
+
+      setCurrentStackCardsIndex(currentStackCardsIndex + 1)
       setIsOver(false)
       dropCard(dispatch, item, id)
     },

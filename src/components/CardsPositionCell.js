@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import { ItemTypes } from '../cardsData'
-import { selectCards } from '../features/cardSlice'
+import { flip, selectCards } from '../features/cardSlice'
+import { pipe } from '../helpers'
 import Card from './Card'
 import CardCell from './CardCell'
 import dropCard from './dropCard'
@@ -11,7 +12,7 @@ import findCards from './findCards'
 
 function isAtTopCells (cardsCellId) {
   const cardsCellCode = cardsCellId.toString().charCodeAt()
-  const firstCell = 'A'.charCodeAt()
+  const firstCell = 'B'.charCodeAt()
   const lastCell = 'E'.charCodeAt()
 
   if (cardsCellCode <= firstCell || cardsCellCode >= lastCell) return false
@@ -37,10 +38,13 @@ export default function CardPosition ({ id, style = {}, cards }) {
   const dispatch = useDispatch()
 
   const Cards = findCards(cards, cardsInfo, id)
+  const lastCard = Cards[Cards.length - 1].props || null
+
+  pipe(flip, dispatch)(lastCard.id)
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
-    canDrop: (item, monitor) => rules(cardsInfo, item, Cards[Cards.length - 1].props.index, Cards[Cards.length - 1].props.color, id),
+    canDrop: (item, monitor) => rules(cardsInfo, item, lastCard.index || -1, lastCard.color || '', id),
     drop: item => {
       setIsOver(false)
       dropCard(dispatch, item, id)
