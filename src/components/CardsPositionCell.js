@@ -9,6 +9,7 @@ import Card from './Card'
 import CardCell from './CardCell'
 import dropCard from './dropCard'
 import findCards from './findCards'
+import findCard from '../findCard'
 
 function isAtTopCells (cardsCellId) {
   const cardsCellCode = cardsCellId.toString().charCodeAt()
@@ -20,18 +21,19 @@ function isAtTopCells (cardsCellId) {
   return true
 }
 
-function rules (store, item, lastCardIndex, lastCardColor, cardsCellId) {
+function rules (store, item, lastCard, cardsCellId) {
   const { cardId } = item
-  const toBeDroppedCard = store.find(cardInfo => cardInfo.id === cardId)
+  const toBeDroppedCard = findCard(cardId, store)
 
   if (isAtTopCells(cardsCellId)) return false
-  if ((lastCardIndex - toBeDroppedCard.index) !== 1) return false
-  if (toBeDroppedCard.color === lastCardColor) return false
+
+  if ((lastCard.index - toBeDroppedCard.index) !== 1) return false
+  if (toBeDroppedCard.color === lastCard.color) return false
 
   return true
 }
 
-export default function CardPosition ({ id, style = {}, cards }) {
+export default function CardsPositionPosition ({ id, style = {}, cards }) {
   const [isOver, setIsOver] = useState(false)
 
   const { cardsInfo } = useSelector(selectCards)
@@ -44,7 +46,7 @@ export default function CardPosition ({ id, style = {}, cards }) {
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
-    canDrop: (item, monitor) => rules(cardsInfo, item, lastCard.index || -1, lastCard.color || '', id),
+    canDrop: (item, monitor) => rules(cardsInfo, item, lastCard, id),
     drop: item => {
       setIsOver(false)
       dropCard(dispatch, item, id)
@@ -59,7 +61,7 @@ export default function CardPosition ({ id, style = {}, cards }) {
   )
 }
 
-CardPosition.propTypes = {
+CardsPositionPosition.propTypes = {
   id: PropTypes.string,
   style: PropTypes.object,
   cards: PropTypes.arrayOf(Card).isRequired

@@ -5,8 +5,8 @@ import { shuffle } from './helpers'
 export default function generateCardsInfo () {
   const finalArray = []
   const cardsPositionArray = shuffle(cardSymbols
-    .flatMap(({ name, symbol }) =>
-      cardNumbers.map(({ rank, index }) => CardInfo({ rank, index, name, symbol }))
+    .flatMap(({ name, symbol, color }) =>
+      cardNumbers.map(({ rank, index }) => CardInfo({ rank, index, name, symbol, color }))
     )
   )
 
