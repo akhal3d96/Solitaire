@@ -1,16 +1,9 @@
 import React from 'react'
-import { cardNumbers, cardSymbols } from '../cardsData'
 import Card from './Card'
-import cardId from '../cardId'
 
-export default function generateCards () {
-  return cardSymbols.flatMap(cardSymbol /* Symbol name */ =>
-    cardNumbers.map(cardNumber => {
-      const generatedCardId = cardId(cardNumber.rank, cardSymbol.name)
-
-      return <Card key={generatedCardId} index={cardNumber.index} rank={cardNumber.rank}
-        symbol={cardSymbol.symbol} name={cardSymbol.name} id={generatedCardId}
-        color={cardSymbol.color} />
-    })
-  )
+export default function generateCards (cardsInfo) {
+  return cardsInfo
+    .map(({ name, rank, symbol, id, color, isBack, index }) =>
+      <Card key={id} id={id} index={index} name={name} rank={rank} symbol={symbol} color={color} isBack={isBack}/>
+    )
 }

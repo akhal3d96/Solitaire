@@ -2,19 +2,16 @@ import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useDrag } from 'react-dnd'
-import { useSelector } from 'react-redux'
 import { ItemTypes } from '../cardsData'
-import { selectCards } from '../features/cardSlice'
-import findCard from '../findCard'
 
 export default function Card (props) {
-  const { rank, symbol, name, id } = props
+  const { rank, symbol, name, id, isBack } = props
 
-  const { cardsInfo } = useSelector(selectCards)
-  const { isBack } = findCard(id, cardsInfo)
+  // const { cardsInfo } = useSelector(selectCards)
+  // const { isBack } = findCard(id, cardsInfo)
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type: ItemTypes.CARD, cardId: props.id },
+    item: { type: ItemTypes.CARD, cardId: id },
     canDrag: monitor => !isBack,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
@@ -44,5 +41,6 @@ Card.propTypes = {
   name: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   color: PropTypes.string,
+  isBack: PropTypes.bool,
   id: PropTypes.string
 }

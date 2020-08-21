@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ItemTypes } from '../cardsData'
 import { selectCards } from '../features/cardSlice'
-import Card from './Card'
+import findCards from '../findCards'
 import CardCell from './CardCell'
 import dropCard from './dropCard'
-import findCards from './findCards'
+import generateCards from './generateCards'
 
 function initialDropRule (stackSymbol, currentStackCardsIndex, cardId) {
   return !stackSymbol /* is undefined */ &&
@@ -31,15 +31,13 @@ function rules (cardsInfo, item, stackSymbol, currentStackCardsIndex) {
   return false
 }
 
-export default function CardPositionsTopCells ({ id, style = {}, cards }) {
+export default function CardPositionsTopCells ({ id, style = {} }) {
   const [isOver, setIsOver] = useState(false)
   const [currentStackCardsIndex, setCurrentStackCardsIndex] = useState(0)
   const [stackSymbol, setStackSymbol] = useState()
 
   const { cardsInfo } = useSelector(selectCards)
   const dispatch = useDispatch()
-
-  const Cards = findCards(cards, cardsInfo, id)
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -57,15 +55,16 @@ export default function CardPositionsTopCells ({ id, style = {}, cards }) {
     hover: () => setIsOver(true)
   })
 
+  const cards = findCards(cardsInfo, 'position', id)
+
   return (
     <CardCell ref={drop} style={style} isOver={isOver}>
-      {Cards}
+      {generateCards(cards)}
     </CardCell>
   )
 }
 
 CardPositionsTopCells.propTypes = {
   id: PropTypes.string,
-  style: PropTypes.object,
-  cards: PropTypes.arrayOf(Card).isRequired
+  style: PropTypes.object
 }

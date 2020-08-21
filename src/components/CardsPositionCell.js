@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import { ItemTypes } from '../cardsData'
 import { flip, selectCards } from '../features/cardSlice'
+import findCard from '../findCard'
+import findCards from '../findCards'
 import { pipe } from '../helpers'
-import Card from './Card'
 import CardCell from './CardCell'
 import dropCard from './dropCard'
-import findCards from './findCards'
-import findCard from '../findCard'
+import generateCards from './generateCards'
 
 function isAtTopCells (cardsCellId) {
   const cardsCellCode = cardsCellId.toString().charCodeAt()
@@ -33,16 +33,25 @@ function rules (store, item, lastCard, cardsCellId) {
   return true
 }
 
-export default function CardsPositionPosition ({ id, style = {}, cards }) {
+export default function CardsPositionCell ({ id, style = {} }) {
   const [isOver, setIsOver] = useState(false)
+  const [cards, setCards] = useState([])
+  const [lastCard, setLastCard] = useState()
 
   const { cardsInfo } = useSelector(selectCards)
   const dispatch = useDispatch()
 
-  const Cards = findCards(cards, cardsInfo, id)
-  const lastCard = Cards[Cards.length - 1].props || null
+  useEffect(() => {
+    setCards(findCards(cardsInfo, 'position', id))
+  }, [cardsInfo])
 
-  pipe(flip, dispatch)(lastCard.id)
+  useEffect(() => {
+    setLastCard(cards[cards.length - 1])
+  }, [cards])
+
+  useEffect(() => {
+    lastCard && pipe(flip, dispatch)(lastCard.id)
+  }, [lastCard])
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -56,13 +65,12 @@ export default function CardsPositionPosition ({ id, style = {}, cards }) {
 
   return (
     <CardCell ref={drop} style={style} isOver={isOver}>
-      {Cards}
+      {generateCards(cards)}
     </CardCell>
   )
 }
 
-CardsPositionPosition.propTypes = {
-  id: PropTypes.string,
-  style: PropTypes.object,
-  cards: PropTypes.arrayOf(Card).isRequired
+CardsPositionCell.propTypes = {
+  id: PropTypes.number,
+  style: PropTypes.object
 }
