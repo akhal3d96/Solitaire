@@ -29,7 +29,6 @@ body {
 
 .card {
 	@include size($card-width, $card-height);
-
 	background-color: wheat;	
 }
 
@@ -41,5 +40,9 @@ body {
 }
 
 .top-column {
-	padding-bottom: 6.5rem;
+	padding-bottom: 5.5rem;
+}
+
+.stack {
+	margin-bottom: -3.2rem;
 }

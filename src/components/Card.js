@@ -7,9 +7,6 @@ import { ItemTypes } from '../cardsData'
 export default function Card (props) {
   const { rank, symbol, name, id, isBack } = props
 
-  // const { cardsInfo } = useSelector(selectCards)
-  // const { isBack } = findCard(id, cardsInfo)
-
   const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.CARD, cardId: id },
     canDrag: monitor => !isBack,
@@ -19,10 +16,13 @@ export default function Card (props) {
   })
 
   const cardClassName = classNames('card', `rank-${rank}`, name, { back: isBack })
-  const cardStyle = { opacity: isDragging ? 0.5 : 1 }
+  const cardStyle = {
+    opacity: isDragging ? 0.5 : 1,
+    cursor: isBack ? 'auto' : 'grab'
+  }
 
   return (
-    <div className="playingCards fourColours" ref={drag} style={cardStyle}>
+    <div className="playingCards fourColours stack" ref={drag} style={cardStyle}>
       <div className={cardClassName} >
         {!isBack &&
         (<>

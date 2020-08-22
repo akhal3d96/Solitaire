@@ -11,7 +11,6 @@
 ********************************************************************/
 
 .playingCards .card {
-    cursor: move;
     display: inline-block;
     width: 3.3em;
     height: 4.6em;
