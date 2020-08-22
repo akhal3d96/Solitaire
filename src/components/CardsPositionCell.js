@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import { ItemTypes } from '../cardsData'
-import { flip, selectCards } from '../features/cardSlice'
+import { flip, selectCards, stackPush } from '../features/cardSlice'
 import findCard from '../findCard'
 import findCards from '../findCards'
 import { pipe } from '../helpers'
@@ -57,8 +57,14 @@ export default function CardsPositionCell ({ id, style = {} }) {
     accept: ItemTypes.CARD,
     canDrop: (item, monitor) => rules(cardsInfo, item, lastCard, id),
     drop: item => {
-      setIsOver(false)
-      dropCard(dispatch, item, id)
+      const cardInfo = findCard(item.cardId, cardsInfo)
+      if (cardInfo.stack === 0) {
+        setIsOver(false)
+        dropCard(dispatch, item, id)
+        pipe(stackPush, dispatch)({ cardId: item.cardId, stackNumber: lastCard.stack + 1 })
+      } else {
+        // Move pile
+      }
     },
     hover: () => setIsOver(true)
   })

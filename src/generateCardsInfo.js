@@ -1,5 +1,5 @@
-import { cardNumbers, cardSymbols } from './cardsData'
 import { CardInfo } from './CardInfo'
+import { cardNumbers, cardSymbols } from './cardsData'
 import { shuffle } from './helpers'
 
 export default function generateCardsInfo () {

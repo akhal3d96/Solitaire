@@ -20,10 +20,18 @@ export const cardSlice = createSlice({
       const cardInfo = findCard(cardId, state)
 
       cardInfo.isBack = false
+      cardInfo.stack = 0
+    },
+    stackPush: (state, action) => {
+      const { payload } = action
+      const { cardId, stackNumber } = payload
+
+      const cardInfo = findCard(cardId, state)
+      cardInfo.stack = stackNumber
     }
   }
 })
 
-export const { move, flip } = cardSlice.actions
+export const { move, flip, stackPush } = cardSlice.actions
 
 export const selectCards = state => state
