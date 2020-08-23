@@ -1,5 +1,6 @@
 {
   "name": "solitaire",
+  "homepage": "solitaire",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
