@@ -27,6 +27,7 @@ function rules (store, item, lastCard, cardsCellId) {
 
   if (isAtTopCells(cardsCellId)) return false
 
+  if (lastCard === undefined) return true
   if ((lastCard.index - toBeDroppedCard.index) !== 1) return false
   if (toBeDroppedCard.color === lastCard.color) return false
 
@@ -57,14 +58,20 @@ export default function CardsPositionCell ({ id, style = {} }) {
     accept: ItemTypes.CARD,
     canDrop: (item, monitor) => rules(cardsInfo, item, lastCard, id),
     drop: item => {
-      const cardInfo = findCard(item.cardId, cardsInfo)
-      if (cardInfo.stack === 0) {
-        setIsOver(false)
-        dropCard(dispatch, item, id)
-        pipe(stackPush, dispatch)({ cardId: item.cardId, stackNumber: lastCard.stack + 1 })
-      } else {
-        // Move pile
-      }
+      const draggedCardInfo = findCard(item.cardId, cardsInfo)
+
+      cardsInfo
+        .filter(cardInfo => {
+          return cardInfo.position === draggedCardInfo.position &&
+          cardInfo.stack >= draggedCardInfo.stack
+        })
+        .forEach(cardInfo => {
+          dropCard(dispatch, { cardId: cardInfo.id }, id)
+          const lastCardStack = lastCard ? lastCard.stack : 0
+          pipe(stackPush, dispatch)({ cardId: cardInfo.id, stackNumber: lastCardStack + 1 })
+        })
+
+      setIsOver(false)
     },
     hover: () => setIsOver(true)
   })

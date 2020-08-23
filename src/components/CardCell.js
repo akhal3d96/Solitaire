@@ -8,7 +8,7 @@ export const CardCell = React.forwardRef((props, ref) => {
 
   return (
     <div className="column" ref={ref}>
-      <div className='card-position' style={cardPositionStyle} >
+      <div className='card-position deck' style={cardPositionStyle} >
         {children}
       </div>
     </div>

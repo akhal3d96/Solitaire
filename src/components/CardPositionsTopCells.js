@@ -9,6 +9,15 @@ import CardCell from './CardCell'
 import dropCard from './dropCard'
 import generateCards from './generateCards'
 
+function checkIfUserWon (cardsInfo) {
+  const BCells = cardsInfo.filter(cardInfo => cardInfo.position === 'B').length
+  const CCells = cardsInfo.filter(cardInfo => cardInfo.position === 'C').length
+  const DCells = cardsInfo.filter(cardInfo => cardInfo.position === 'D').length
+  const ECells = cardsInfo.filter(cardInfo => cardInfo.position === 'E').length
+
+  return BCells === CCells === DCells === ECells === 13
+}
+
 function initialDropRule (stackSymbol, currentStackCardsIndex, cardId) {
   return !stackSymbol /* is undefined */ &&
   !currentStackCardsIndex /* is zero */ &&
@@ -51,6 +60,8 @@ export default function CardPositionsTopCells ({ id, style = {} }) {
       setCurrentStackCardsIndex(currentStackCardsIndex + 1)
       setIsOver(false)
       dropCard(dispatch, item, id)
+
+      if (checkIfUserWon(cardsInfo)) alert('You won!')
     },
     hover: () => setIsOver(true)
   })
@@ -58,8 +69,8 @@ export default function CardPositionsTopCells ({ id, style = {} }) {
   const cards = findCards(cardsInfo, 'position', id)
 
   return (
-    <CardCell ref={drop} style={style} isOver={isOver}>
-      {generateCards(cards)}
+    <CardCell ref={drop} style={style} isOver={isOver} isDeck={true}>
+      {generateCards(cards)[0]}
     </CardCell>
   )
 }

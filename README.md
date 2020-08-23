@@ -9,8 +9,10 @@ A very simple solitaire implementation
 * Bulma
 
 ## Todo
-- [ ] Make careds stacked on top of each other.
+- [x] Make careds stacked on top of each other.
 
-- [ ] Prompt user if he wins.
+- [x] Prompt user if he wins.
 
 - [ ] Add a timer.
+
+- [ ] Clean up the code!
